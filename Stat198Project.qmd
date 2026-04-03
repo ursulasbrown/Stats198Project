@@ -1,0 +1,29 @@
+---
+title: "Stat 198 Final Project"
+author: 
+- "Ursula Brown" 
+- "Sara Meltzer" 
+- "Anona Thomas"
+format: pdf
+---
+
+```{r}
+#| warning: false
+#| echo: false
+library(tidyverse)
+library(readxl)
+NHA_Indicators <- read_xlsx("NHA_indicators.xlsx")
+```
+
+
+# Introduction
+
+
+# Methodology
+
+
+# Results
+
+
+# Discussion
+
