@@ -11,9 +11,7 @@ format: pdf
 #| warning: false
 #| echo: false
 library(tidyverse)
-library(readxl)
-NHA_Indicators <- read_xlsx("NHA_indicators.xlsx")
-MM_Indicators <- read_xlsx("MM indicators.xlsx")
+Data <- read.csv("Linked Birth  Infant Death Records, 2017-2023 Expanded.csv")
 ```
 
 
