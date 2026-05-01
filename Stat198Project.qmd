@@ -11,14 +11,33 @@ format: pdf
 #| warning: false
 #| echo: false
 library(tidyverse)
-Data <- read.csv("Linked Birth  Infant Death Records, 2017-2023 Expanded.csv")
+
+birth_data <- read.csv("Linked Birth  Infant Death Records, 2017-2023 Expanded.csv") |>
+  filter(!is.na(Infant.Birth.Weight.12.Code)) |>
+  mutate(
+   death_rate = (Deaths / (Deaths + Births))
+    )
+
+summary(birth_data)
 ```
 
 
 # Introduction
-Hi my name is ursula!!!!
+This project determines how month born, infant birth weight, mother's pre-pregnancy BMI, and length of prenatal care influence death rate across the US. To examine this, we are seeing if X is associated with a higher death rate.
+
+
 
 # Methodology
+
+A linear regression model was fit to the available data to determine the influcences that these factors have on the death rate.
+
+```{r}
+ 
+
+m1 <- lm(death_rate ~ Month + Infant.Birth.Weight.12 + Mother.s.Pre.pregnancy.BMI + Month.Prenatal.Care.Began, data = birth_data)
+
+summary(m1)
+```
 
 
 # Results
