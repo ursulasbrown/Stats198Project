@@ -38,7 +38,7 @@ m1 <- lm(death_rate ~ Month + Infant.Birth.Weight.12 + Mother.s.Pre.pregnancy.BM
 
 summary(m1)
 ```
-
+Infant birth weight and pre pregnancy BMI are all very significant factors in the death rate!
 
 # Results
 
