@@ -15,33 +15,54 @@ library(tidyverse)
 birth_data <- read.csv("Linked Birth  Infant Death Records, 2017-2023 Expanded.csv") |>
   filter(!is.na(Infant.Birth.Weight.12.Code)) |>
   mutate(
-   death_rate = (Deaths / (Deaths + Births))
-    )
-
-summary(birth_data)
+   death_rate = (Deaths / (Deaths + Births)))
 ```
 
 
 # Introduction
-This project determines how month born, infant birth weight, mother's pre-pregnancy BMI, and length of prenatal care influence death rate across the US. To examine this, we are seeing if X is associated with a higher death rate.
+Infant mortality rate is considered a key indicator of population health. Understanding the factors that contribute to infant death rates is important for improving both maternal and child health outcomes in the United States. In this project, we investigate how month born, infant birth weight, mother's pre-pregnancy BMI, and length of prenatal care influence infant death rate across the US. 
 
+Our primary research question is "To what extent do month of birth, infant's birth weight, mather's pre-pregnancy BMI, and duration of prenatal care influence the likelihood of infant death in the US?" To address this question, we are analyzing a dataset from _______ (someone who knows the website we got it from or the government or whatever put that in)____
 
+To examine the relationship between our selected variables, we are creating a linear regression model. The response variable is infant death rate, and month born, infant birth weight, mother's pre-pregnancy BMI and length of prenatal care are the predictors. In the dataset, infant death rate is a continuous variable. Month born, infant birth weight, mother's pre-pregnancy BMI and length of prenatal care are all categorical variables. Infant birth weight and mother's pre-pregnancy BMI have each been organized into 5 categories, and month prenatal care began has 6 categories. This organization allows for trends to be seen more easily. _____(IS THIS TRUE?)_______(is there a reason its better there's categories?)
+
+This model will give the direction and strength of the association between each predictor and the response variable while controlling for the effects of the other variables in the model. Then, we will be able to answer our research question and determine which predictors influence the likelihood of infant death.
 
 # Methodology
 
 A linear regression model was fit to the available data to determine the influcences that these factors have on the death rate.
 
 ```{r}
- 
-
-m1 <- lm(death_rate ~ Month + Infant.Birth.Weight.12 + Mother.s.Pre.pregnancy.BMI + Month.Prenatal.Care.Began, data = birth_data)
+m1 <- lm(death_rate ~ Month + Infant.Birth.Weight.12 + 
+           Mother.s.Pre.pregnancy.BMI + Month.Prenatal.Care.Began, 
+         data = birth_data)
 
 summary(m1)
 ```
 Infant birth weight and pre pregnancy BMI are all very significant factors in the death rate!
 
 # Results
-
+```{r}
+library(ggplot2)
+ggplot(data = birth_data, 
+       aes(x = Month, y = death_rate)) +
+geom_boxplot()
+```
+```{r}
+ggplot(data = birth_data, 
+       aes(x = Infant.Birth.Weight.12, y = death_rate)) +
+geom_boxplot()
+```
+```{r}
+ggplot(data = birth_data, 
+       aes(x = Mother.s.Pre.pregnancy.BMI, y = death_rate)) +
+geom_boxplot()
+```
+```{r}
+ggplot(data = birth_data, 
+       aes(x = Month.Prenatal.Care.Began, y = death_rate)) +
+geom_boxplot()
+```
 
 # Discussion
 
