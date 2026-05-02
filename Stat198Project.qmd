@@ -59,7 +59,7 @@ ggplot(data = m1, mapping = aes(x = m1$fitted.values, y = m1$residuals)) +
 
 ```
 
-From the residual plot, we can see that the data symmetrical about y = 0 and therefore linearity is upheld. The residuals are not entirely evenly spaced along the y axis so constant variance is violated. We will ignore this for our data analysis because the variance is not very off.
+From the residual plot, we can see that the data is symmetrical about y = 0 and therefore linearity is upheld. The residuals are not entirely evenly spaced along the y axis so constant variance is violated. We will ignore this for our data analysis because the variance is not very off.
 
 ```{r}
 #| warning: false
@@ -74,7 +74,7 @@ ggplot(data = m1, mapping = aes(x = m1$residuals)) +
 
 The errors appear to follow a Gaussian distribution, centered at 0. Thus, the normality assumption is upheld.
 
-With the assumptions fufilled, we can use the linear regression model to get the following intercept and slopes of our parameters:
+With the assumptions fufilled, we can use the linear regression model to get the following intercepts and slopes of our parameters:
 
 ```{r}
 #| warning: false
@@ -109,7 +109,9 @@ With the assumptions fufilled, we can use the linear regression model to get the
 #geom_boxplot()
 ```
 
-A linear regression model was fit to the available data to determine the influences that these factors have on the infant death rate. \# Results
+A linear regression model was fit to the available data to determine the influences that these factors have on the infant death rate.
+
+# Results
 
 ```{r}
 #| warning: false
@@ -123,17 +125,17 @@ summary(m1)
 
 In this model, we find that the results are consistent with what previous studies have found.
 
-For month of birth, it does not seem to be as significant of a predictor in comparison to the other coefficients in the model. For a a birth occurring in the reference month of April, with the reference birth weight category, reference BMI category (extreme obesity), and prenatal care beginning in the reference month (1st month) is predicted to have an average death rate of 0.130.Compared to the reference month, births in January and November are associated with an average increase in death rate of 0.0117, adjusting for the other variables in the model (p = 0.026).
+For month of birth, it does not seem to be as significant of a predictor in comparison to the other coefficients in the model. For a a birth occurring in the reference month of April, with the reference birth weight category, reference BMI category (extreme obesity), and prenatal care beginning in the reference month (1st month) is predicted to have an average death rate of 0.130. Compared to the reference month, births in January and November are associated with an average increase in death rate of 0.0117, adjusting for the other variables in the model (p = 0.026).
 
 For maternal pre-pregnancy BMI, most BMI categories (normal, overweight, obese) are associated with slightly lower death rates, with statistically significant effects (p \< 0.01 in most cases) when compared to the reference BMI category and adjusting for other variables in the model. Specifically, compared to the reference BMI category, individuals with normal BMI are predicted to have a 0.0217 lower death rate, adjusting for other variables (p \< 0.001).
 
 For pre-natal care, earlier pre-natal care timing is associated with lower infant death rates. Beginning care in the 2nd or 3rd month is associated with a reduction of about 0.055–0.056 in death rate (p \< 0.001) when compared to the reference month (the 1st month) and adjusting for all other variables in the model. However, although there is a lower predicted infant mortality with beginning pre-natal care at a month other than the first one, such as the second month, this may be due to confounding variables such as high-risk pregnancies beginning pre-natal care earlier like at month one.
 
-The strongest association with infant death rate seems to be associated with birth weight. Compared ot the reference category and adjusting for other variables, Extremely low birth weight (\<500g) is associated with a much higher death rate (β ≈ +0.375, p \< 0.001). Similarly, 500–999g is also strongly associated with higher mortality (β ≈ +0.121, p \< 0.001). In contrast, higher birth weight categories (1500g–3999g) are associated with substantially lower death rates compared to the reference group (all p \< 0.001).
+The strongest association with infant death rate seems to be associated with birth weight. Compared to the reference category and adjusting for other variables, Extremely low birth weight (\<500g) is associated with a much higher death rate (β ≈ +0.375, p \< 0.001). Similarly, 500–999g is also strongly associated with higher mortality (β ≈ +0.121, p \< 0.001). In contrast, higher birth weight categories (1500g–3999g) are associated with substantially lower death rates compared to the reference group (all p \< 0.001).
 
 # Discussion
 
-Overall, we fit a linear regression model to predict the output of infant death rate suing the predictors of month of birth, infant birth weight category, maternal pre-pregnancy BMI, and timing of prenatal care. This model suggests that these variable are highly associated with infant mortality differences with a high predictive value and adjusted R\^2 of 0.9842.
+Overall, we fit a linear regression model to predict the output of infant death rate using the predictors of month of birth, infant birth weight category, maternal pre-pregnancy BMI, and timing of prenatal care. This model suggests that these variables are highly associated with infant mortality differences with a high predictive value and adjusted R\^2 of 0.9842.
 
 These results suggest that infant birth weight is a very significant predictor of infant mortality in this data set. Extremely low birth weight infants have dramatically higher death rates, which is consistent with previous literature (Ely and Driscoll 2025). Timing of prenatal care also appears important, with earlier care associated with lower mortality, highlighting the benefits of earlier access to medical care. Maternal BMI shows statistically significant associations, but the effect sizes are small, suggesting it is less influential than birth weight or prenatal care timing. Seasonal variation in birth month appears minimal in this model which is expected.
 
