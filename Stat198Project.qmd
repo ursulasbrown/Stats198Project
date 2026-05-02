@@ -7,75 +7,142 @@ author:
 format: pdf
 ---
 
+# Introduction
+
+Infant mortality rate is considered a key indicator for population health and reflects healthcare access, socioeconomic stresses, and environmental factors. Infant mortality is most commonly caused by birth defects, sudden infant death syndrome, pregnancy complications and injury (Cleveland Clinic, 2025). Previous investigations have shown that preterm births, and therefore lower birth weights, have accounted for the majority of infant deaths, up to 65% in some years (Ely and Driscoll 2025). BMI and prenatal care have also been heavily studied and are thought to have profound effects on birth outcomes as well. Understanding the factors that contribute to infant death rates is important for improving both maternal and child health outcomes in the United States. In this project, we investigate how infant birth month, infant birth weight, mother's pre-pregnancy BMI, and length of prenatal care influence infant death rate across the US using model statistics, to either corroborate or contradict these previous findings.
+
+To address this question, we are analyzing a data set from \_\_\_\_\_\_\_. This data was collected by \_\_\_\_\_\_.
+
+A data dictionary for the variables pulled from this data set are provided below:
+
+-   Month - The month that the infant was born.
+
+-   Infant.Birth.Weight.12 - The classification of the infant's birth weight. Weight groups were classified as "499 grams or less", "500 - 999 grams", "1000 - 1499 grams", "1500 - 1999 grams", "2000 - 2499 grams", "2500 - 2999 grams", "3000 - 3499 grams", and 3500 - 3999 grams".
+
+-   Mother.s.Pre.pregnancy.BMI - The classification for the mother's BMI score. BMI scores were classified as "Normal 18.5-24.9", "Overweight 25.0-29.9", "Obesity I 30.0-34.9", "Obesity II 35.0-39.9", or "Unknown or Not Stated".
+
+-   Month.Prenatal.Care.Began - The month of pregnancy that the mother began to take prenatal vitamins or supplements. If no pre-natals were taken, "No prenatal care" is the code. If unknown, "Unknown or not stated" is the code.
+
+-   death_rate: The calculated rate of infant deaths based on Deaths / (Deaths + Births). This was created using the data from the data set.
+
+Missing data (N/A) was filtered and removed from the data set.
+
+# Methodology
+
+To examine the relationship between our selected variables, a linear regression model is used. The response variable is infant death rate, and month born, infant birth weight, mother's pre-pregnancy BMI and length of prenatal care are the predictors. In the data set, infant death rate is a continuous variable. Month born, infant birth weight, mother's pre-pregnancy BMI and length of prenatal care are all categorical variables.
+
+This model will give the direction and strength of the association between each predictor and the response variable while controlling for the effects of the other variables in the model. Then, we will be able to answer our research question and determine which predictors influence the likelihood of infant death.
+
+In order to use a linear regression model, certain assumptions must be met. The errors in the model must be independent, which means that the outcomes should also be independent. The regression model must have linear parameters.There must be a constant variance of the errors, regardless of predictor values. And finally, the errors must follow a normal distribution. The following assumptions have been evaluated below.
+
+Independence is assumed because one infant mortality should not affect another infant mortality.
+
 ```{r}
 #| warning: false
 #| echo: false
+
 library(tidyverse)
 
 birth_data <- read.csv("Linked Birth  Infant Death Records, 2017-2023 Expanded.csv") |>
   filter(!is.na(Infant.Birth.Weight.12.Code)) |>
   mutate(
    death_rate = (Deaths / (Deaths + Births)))
+m1 <- lm(death_rate ~ Month + Infant.Birth.Weight.12 + 
+           Mother.s.Pre.pregnancy.BMI + Month.Prenatal.Care.Began, 
+         data = birth_data)
+
+ggplot(data = m1, mapping = aes(x = m1$fitted.values, y = m1$residuals)) + 
+  geom_point() + 
+  labs(x = "Fitted values", y = "Residuals",
+       title = "Residual Plot") + 
+  geom_hline(yintercept = 0, color = "red")
+
 ```
 
-
-# Introduction
-Infant mortality rate is considered a key indicator of population health. Understanding the factors that contribute to infant death rates is important for improving both maternal and child health outcomes in the United States. In this project, we investigate how month born, infant birth weight, mother's pre-pregnancy BMI, and length of prenatal care influence infant death rate across the US. 
-
-Our primary research question is "To what extent do month of birth, infant's birth weight, mather's pre-pregnancy BMI, and duration of prenatal care influence the likelihood of infant death in the US?" To address this question, we are analyzing a dataset from _______ (someone who knows the website we got it from or the government or whatever put that in)____
-
-To examine the relationship between our selected variables, we are creating a linear regression model. The response variable is infant death rate, and month born, infant birth weight, mother's pre-pregnancy BMI and length of prenatal care are the predictors. In the dataset, infant death rate is a continuous variable. Month born, infant birth weight, mother's pre-pregnancy BMI and length of prenatal care are all categorical variables. Infant birth weight and mother's pre-pregnancy BMI have each been organized into 5 categories, and month prenatal care began has 6 categories. This organization allows for trends to be seen more easily. _____(IS THIS TRUE?)_______(is there a reason its better there's categories?)
-
-This model will give the direction and strength of the association between each predictor and the response variable while controlling for the effects of the other variables in the model. Then, we will be able to answer our research question and determine which predictors influence the likelihood of infant death.
-
-# Methodology
-
-A linear regression model was fit to the available data to determine the influcences that these factors have on the death rate.
+From the residual plot, we can see that the data symmetrical about y = 0 and therefore linearity is upheld. The residuals are not entirely evenly spaced along the y axis so constant variance is violated. We will ignore this for our data analysis because the variance is not very off.
 
 ```{r}
+#| warning: false
+#| echo: false
+ggplot(data = m1, mapping = aes(x = m1$residuals)) + 
+  geom_histogram(color = "lightblue",
+                 fill = "blue") + 
+  labs(x = "Residual",
+       y = "Density",
+       title = "Histogram of Residuals")
+```
+
+The errors appear to follow a Gaussian distribution, centered at 0. Thus, the normality assumption is upheld.
+
+With the assumptions fufilled, we can use the linear regression model to get the following intercept and slopes of our parameters:
+
+```{r}
+#| warning: false
+#| echo: false
+#library(ggplot2)
+#ggplot(data = birth_data, 
+      # aes(x = Month, y = death_rate)) +
+#geom_boxplot()
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#ggplot(data = birth_data, 
+   #    aes(x = Infant.Birth.Weight.12, y = death_rate)) +
+#geom_boxplot()
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#ggplot(data = birth_data, 
+     #  aes(x = Mother.s.Pre.pregnancy.BMI, y = death_rate)) +
+#geom_boxplot()
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#ggplot(data = birth_data, 
+      # aes(x = Month.Prenatal.Care.Began, y = death_rate)) +
+#geom_boxplot()
+```
+
+A linear regression model was fit to the available data to determine the influences that these factors have on the infant death rate. \# Results
+
+```{r}
+#| warning: false
+#| echo: false
 m1 <- lm(death_rate ~ Month + Infant.Birth.Weight.12 + 
            Mother.s.Pre.pregnancy.BMI + Month.Prenatal.Care.Began, 
          data = birth_data)
 
 summary(m1)
 ```
-Infant birth weight and pre pregnancy BMI are all very significant factors in the death rate!
 
-# Results
-```{r}
-library(ggplot2)
-ggplot(data = birth_data, 
-       aes(x = Month, y = death_rate)) +
-geom_boxplot()
-```
-```{r}
-ggplot(data = birth_data, 
-       aes(x = Infant.Birth.Weight.12, y = death_rate)) +
-geom_boxplot()
-```
-```{r}
-ggplot(data = birth_data, 
-       aes(x = Mother.s.Pre.pregnancy.BMI, y = death_rate)) +
-geom_boxplot()
-```
-```{r}
-ggplot(data = birth_data, 
-       aes(x = Month.Prenatal.Care.Began, y = death_rate)) +
-geom_boxplot()
-```
-
-# Discussion
-
-Overall, we fit a linear regression model to predict the output of infant death rate suing the predictors of month of birth, infant birth weight category, maternal pre-pregnancy BMI, and timing of prenatal care. This model suggests that these variable are highly associated with infant mortality differences with a high predictive value and adjusted R^2 of 0.9842. 
+In this model, we find that the results are consistent with what previous studies have found.
 
 For month of birth, it does not seem to be as significant of a predictor in comparison to the other coefficients in the model. For a a birth occurring in the reference month of April, with the reference birth weight category, reference BMI category (extreme obesity), and prenatal care beginning in the reference month (1st month) is predicted to have an average death rate of 0.130.Compared to the reference month, births in January and November are associated with an average increase in death rate of 0.0117, adjusting for the other variables in the model (p = 0.026).
 
-For maternal pre-pregnancy BMI, most BMI categories (normal, overweight, obese) are associated with slightly lower death rates, with statistically significant effects (p < 0.01 in most cases) when compared to the reference BMI category and adjusting for other variables in the model. Specifically, compared to the reference BMI category, individuals with normal BMI are predicted to have a 0.0217 lower death rate, adjusting for other variables (p < 0.001). 
+For maternal pre-pregnancy BMI, most BMI categories (normal, overweight, obese) are associated with slightly lower death rates, with statistically significant effects (p \< 0.01 in most cases) when compared to the reference BMI category and adjusting for other variables in the model. Specifically, compared to the reference BMI category, individuals with normal BMI are predicted to have a 0.0217 lower death rate, adjusting for other variables (p \< 0.001).
 
-For pre-natal care, earlier pre-natal care timing is associated with lower infant death rates. Beginning care in the 2nd or 3rd month is associated with a reduction of about 0.055–0.056 in death rate (p < 0.001) when compared to the reference month (the 1st month) and adjusting for all other variables in the model. However, although there is a lower predicted infant mortality with beginning pre-natal care at a month other than the first one, such as the second month, this may be due to confounding variables such as high-risk pregnancies beginning pre-natal care earlier like at month one. 
+For pre-natal care, earlier pre-natal care timing is associated with lower infant death rates. Beginning care in the 2nd or 3rd month is associated with a reduction of about 0.055–0.056 in death rate (p \< 0.001) when compared to the reference month (the 1st month) and adjusting for all other variables in the model. However, although there is a lower predicted infant mortality with beginning pre-natal care at a month other than the first one, such as the second month, this may be due to confounding variables such as high-risk pregnancies beginning pre-natal care earlier like at month one.
 
-The strongest association with infant death rate seems to be associated with birth weight. Compared ot the reference category and adjusting for other variables, Extremely low birth weight (<500g) is associated with a much higher death rate (β ≈ +0.375, p < 0.001). Similarly, 500–999g is also strongly associated with higher mortality (β ≈ +0.121, p < 0.001). In contrast, higher birth weight categories (1500g–3999g) are associated with substantially lower death rates compared to the reference group (all p < 0.001). 
+The strongest association with infant death rate seems to be associated with birth weight. Compared ot the reference category and adjusting for other variables, Extremely low birth weight (\<500g) is associated with a much higher death rate (β ≈ +0.375, p \< 0.001). Similarly, 500–999g is also strongly associated with higher mortality (β ≈ +0.121, p \< 0.001). In contrast, higher birth weight categories (1500g–3999g) are associated with substantially lower death rates compared to the reference group (all p \< 0.001).
 
-Overall, these results suggest that infant birth weight is a very significant predictor of infant mortality in this dataset. Extremely low birth weight infants have dramatically higher death rates, which is consistent with previosu literature (_____CITE_______). Timing of prenatal care also appears important, with earlier care associated with lower mortality, highlighting the benefits of earlier access to emdical care. Maternal BMI shows statistically significant associations, but the effect sizes are small, suggesting it is less influential than birth weight or prenatal care timing. Seasonal variation in birth month appears minimal in this model
+# Discussion
 
-This study has several limitations. This analysis can not establish causal relationships, so this model is limited to identifying associations. The data are observational, so there may be confounding variables not included in the model (e.g., socioeconomic status, access to healthcare). Additionally, since this data was collected from (_____ADD WHERE WE GOT FROM___), categories of "unknown" measurements have been included to account for patient privacy and limited data collection, which may detract for the accuracy of this regression model. Additionally, due to the aforementioned reasons, some death rates may be unreliable due to limited reporting. Such limitations indicate that causal relationships should not be drawn.  
+Overall, we fit a linear regression model to predict the output of infant death rate suing the predictors of month of birth, infant birth weight category, maternal pre-pregnancy BMI, and timing of prenatal care. This model suggests that these variable are highly associated with infant mortality differences with a high predictive value and adjusted R\^2 of 0.9842.
+
+These results suggest that infant birth weight is a very significant predictor of infant mortality in this data set. Extremely low birth weight infants have dramatically higher death rates, which is consistent with previous literature (Ely and Driscoll 2025). Timing of prenatal care also appears important, with earlier care associated with lower mortality, highlighting the benefits of earlier access to medical care. Maternal BMI shows statistically significant associations, but the effect sizes are small, suggesting it is less influential than birth weight or prenatal care timing. Seasonal variation in birth month appears minimal in this model which is expected.
+
+This study has several limitations. This analysis can not establish causal relationships, so this model is limited to identifying associations. The data are observational, so there may be confounding variables not included in the model (e.g., socioeconomic status, access to healthcare). Additionally, since this data was collected from (\_\_\_\_\_ADD WHERE WE GOT FROM\_\_\_), categories of "unknown" measurements have been included to account for patient privacy and limited data collection and missing data was filtered out of the used data set, which may detract from the accuracy of this regression model. Additionally, due to the aforementioned reasons, some death rates may be unreliable due to limited reporting. Such limitations indicate that causal relationships should not be drawn.
+
+## Works Cited
+
+Clinic, C. (2025, January 7). Infant Mortality. Cleveland Clinic. 
+      https://my.clevelandclinic.org/health/articles/infant-mortality
+
+Ely, D., & Driscoll, A. (2025).Infant Mortality in the United States, 2023: Data From the Period           Linked Birth/Infant Death File.National Center for Biotechnology Information.  
+      https://doi.org/10.15620/cdc/174592
