@@ -27,6 +27,30 @@ A data dictionary for the variables pulled from this data set are provided below
 
 Missing data (N/A) was filtered and removed from the data set.
 
+Exploratory Data Analysis
+```{r}
+#| warning: false
+#| echo: false
+library(tidyverse)
+library(ggplot2)
+birth_data <- read.csv("Linked Birth  Infant Death Records, 2017-2023 Expanded.csv") |>
+  filter(!is.na(Infant.Birth.Weight.12.Code)) |>
+  mutate(
+   death_rate = (Deaths / (Deaths + Births)))
+ggplot(data = birth_data, 
+       aes(x = Infant.Birth.Weight.12, y = death_rate)) +
+geom_boxplot()
+```
+
+```{r}
+#| warning: false
+#| echo: false
+ggplot(data = birth_data, 
+       aes(x = Mother.s.Pre.pregnancy.BMI, y = death_rate)) +
+geom_boxplot()
+```
+These two box plots show the distribution of each infant birth weight and mother's pre pregnancy BMI category on infant death rate. On the infant birth weight plot, it is seen that the smallest two birth weight categories have a significantly increased association with infant death rate than the other birth weight categories. On the mother's pre pregnancy BMI plot, most categories have very wide ranges and impact death rate to some extent, but extreme obesity has a significant increased association with death rate.
+
 # Methodology
 
 To examine the relationship between our selected variables, a linear regression model is used. The response variable is infant death rate, and month born, infant birth weight, mother's pre-pregnancy BMI and length of prenatal care are the predictors. In the data set, infant death rate is a continuous variable. Month born, infant birth weight, mother's pre-pregnancy BMI and length of prenatal care are all categorical variables.
@@ -40,13 +64,6 @@ Independence is assumed because one infant mortality should not affect another i
 ```{r}
 #| warning: false
 #| echo: false
-
-library(tidyverse)
-
-birth_data <- read.csv("Linked Birth  Infant Death Records, 2017-2023 Expanded.csv") |>
-  filter(!is.na(Infant.Birth.Weight.12.Code)) |>
-  mutate(
-   death_rate = (Deaths / (Deaths + Births)))
 m1 <- lm(death_rate ~ Month + Infant.Birth.Weight.12 + 
            Mother.s.Pre.pregnancy.BMI + Month.Prenatal.Care.Began, 
          data = birth_data)
@@ -74,42 +91,7 @@ ggplot(data = m1, mapping = aes(x = m1$residuals)) +
 
 The errors appear to follow a Gaussian distribution, centered at 0. Thus, the normality assumption is upheld.
 
-With the assumptions fufilled, we can use the linear regression model to get the following intercepts and slopes of our parameters:
-
-```{r}
-#| warning: false
-#| echo: false
-#library(ggplot2)
-#ggplot(data = birth_data, 
-      # aes(x = Month, y = death_rate)) +
-#geom_boxplot()
-```
-
-```{r}
-#| warning: false
-#| echo: false
-#ggplot(data = birth_data, 
-   #    aes(x = Infant.Birth.Weight.12, y = death_rate)) +
-#geom_boxplot()
-```
-
-```{r}
-#| warning: false
-#| echo: false
-#ggplot(data = birth_data, 
-     #  aes(x = Mother.s.Pre.pregnancy.BMI, y = death_rate)) +
-#geom_boxplot()
-```
-
-```{r}
-#| warning: false
-#| echo: false
-#ggplot(data = birth_data, 
-      # aes(x = Month.Prenatal.Care.Began, y = death_rate)) +
-#geom_boxplot()
-```
-
-A linear regression model was fit to the available data to determine the influences that these factors have on the infant death rate.
+With the assumptions fufilled, we can use the linear regression model fit to the available data. This model allows for determination of the influences that month born, infant birth weight, mother's pre-pregnancy BMI and length of prenatal care have on the infant death rate. The following table displays the intercepts and slopes of our parameters:
 
 # Results
 
